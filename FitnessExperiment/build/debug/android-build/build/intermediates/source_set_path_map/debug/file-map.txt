@@ -1,0 +1,9 @@
+org.qtproject.example.FitnessExperiment-pngs-0 C:\Users\Viktorija\Desktop\VR\RV1\FitnessExperiment\build\debug\android-build\build\generated\res\pngs\debug
+org.qtproject.example.FitnessExperiment-resValues-1 C:\Users\Viktorija\Desktop\VR\RV1\FitnessExperiment\build\debug\android-build\build\generated\res\resValues\debug
+org.qtproject.example.FitnessExperiment-rs-2 C:\Users\Viktorija\Desktop\VR\RV1\FitnessExperiment\build\debug\android-build\build\generated\res\rs\debug
+org.qtproject.example.FitnessExperiment-mergeDebugResources-3 C:\Users\Viktorija\Desktop\VR\RV1\FitnessExperiment\build\debug\android-build\build\intermediates\incremental\debug\mergeDebugResources\merged.dir
+org.qtproject.example.FitnessExperiment-mergeDebugResources-4 C:\Users\Viktorija\Desktop\VR\RV1\FitnessExperiment\build\debug\android-build\build\intermediates\incremental\debug\mergeDebugResources\stripped.dir
+org.qtproject.example.FitnessExperiment-merged_res-5 C:\Users\Viktorija\Desktop\VR\RV1\FitnessExperiment\build\debug\android-build\build\intermediates\merged_res\debug
+org.qtproject.example.FitnessExperiment-android-build-6 C:\Users\Viktorija\Desktop\VR\RV1\FitnessExperiment\build\debug\android-build\res
+org.qtproject.example.FitnessExperiment-debug-7 C:\Users\Viktorija\Desktop\VR\RV1\FitnessExperiment\build\debug\android-build\src\debug\res
+org.qtproject.example.FitnessExperiment-java-8 D:\Qt\5.15.2\android\src\android\java\res

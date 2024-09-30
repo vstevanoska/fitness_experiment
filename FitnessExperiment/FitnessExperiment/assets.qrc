@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>fonts/georgia.ttf</file>
+        <file>fonts/Montserrat-VariableFont_wght.ttf</file>
+        <file>images/biceps-curl-exercise-illustration.jpg</file>
+        <file>images/dumbbell-triceps-extension-exercise-illustration.jpg</file>
+        <file>images/dumbbell-triceps-kickback-exercise-illustration.jpg</file>
+        <file>images/info.png</file>
+    </qresource>
+</RCC>
