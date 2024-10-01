@@ -165,12 +165,8 @@ qint64 FitnessExperiment::getTimestamp()
 
 void FitnessExperiment::sendToServer()
 {
-    // //connect to ws
-    // clientSocket = new QWebSocket();
-    // connect(clientSocket, &QWebSocket::connected, this, &FitnessExperiment::onConnected);
-    // // connect(clientSocket, &QWebSocket::disconnected,    this, &FitnessExperiment::closed);
-
-    // clientSocket->open(QUrl("ws://192.168.10.126:1234"));
+    //start building the json object to be sent to the server
+    //called in experiment.qml
 
     QJsonObject root;
 
@@ -208,7 +204,6 @@ void FitnessExperiment::sendToServer()
         gyrMeasurements.push_back(tempMeasurement);
     }
 
-    //and add them to the final json object
     root.insert("accMeasurements", accMeasurements);
     root.insert("gyrMeasurements", gyrMeasurements);
 
@@ -217,41 +212,10 @@ void FitnessExperiment::sendToServer()
     document.setObject(root);
 
     clientSocket->sendBinaryMessage(document.toJson());
-    // clientSocket->close();
-
-
-    // return document.toJson();
-
-    //save the root object in the filesystem
-
-    // QDateTime currentTimestamp = QDateTime::currentDateTime();
-
-    // QFile saveFile(QString("C:\\Users\\Viktorija\\Desktop\\VR\\RV1\\Test2\\test2\\build\\Android_Qt_5_15_2_Clang_Multi_Abi-Debug\\x86\\" +
-    //                        user + "_" + currentTimestamp.date().year() + "-" + currentTimestamp.date().month() +
-    //                        "-" + currentTimestamp.date().day() + "-" + currentTimestamp.time().hour() + "-" +
-    //                        currentTimestamp.time().minute() + ".json"));
-
-    // if (!saveFile.open(QIODevice::WriteOnly)) {
-
-        //     qDebug() << "Unable to open file!";
-
-    //     //On Android, it's expected to have access permission to the parent of the file name, otherwise,
-    //     //it won't be possible to create this non-existing file.
-
-    //     return;
-    // }
-
-    // saveFile.write(document.toJson());
-    // saveFile.close();
-
-    //(test on pc first!!!)
 }
 
 void FitnessExperiment::onConnected()
 {
-    // qDebug() << "Client is connected!";
-    // clientSocket->sendBinaryMessage(document.toJson());
-
     connect(clientSocket, &QWebSocket::binaryMessageReceived,    this, &FitnessExperiment::processBinaryMessage);
 }
 
@@ -264,19 +228,20 @@ void FitnessExperiment::processBinaryMessage(QByteArray message)
 
     if (root.value("mode").toString() == "getFilenames") {
 
+        //a list of every file in the data folder in the server has been returned
+
         QJsonArray array = root.value("files").toArray();
 
         for (int i = 0; i < array.size(); ++i)
             filenames.push_back(array.at(i).toObject().value("filename").toString());
 
-        qDebug() << "Size: " << filenames.size();
-
-        // setFilenames(QStringList());
-
-        emit loadSelectExperimentPage();
+        emit loadSelectExperimentPage();    //caught in selectexperiment.qml
 
     } else if (root.value("mode").toString() == "getExperiment") {
 
+        //a json object with data of the experiment has been returned
+
+        //clear parameters from previously loaded experiment
         clearParameters();
 
         user            = root.value("user").toString();
@@ -309,7 +274,7 @@ void FitnessExperiment::processBinaryMessage(QByteArray message)
                           (float) tempObject.value("z").toDouble());
         }
 
-        //find min/max for axes
+        //find min/max for axes for accelerator
 
         accTsMin = accelerometerReadings.at(0).timestamp;
         accXMin = accelerometerReadings.at(0).x;
@@ -357,7 +322,7 @@ void FitnessExperiment::processBinaryMessage(QByteArray message)
         accYAvg /= accelerometerReadings.size();
         accZAvg /= accelerometerReadings.size();
 
-        //calculate std
+        //calculate std for accelerator
 
         for (int i = 0; i < accelerometerReadings.size(); ++i) {
             accXStd += qPow(accelerometerReadings.at(i).x - accXAvg, 2);
@@ -369,6 +334,8 @@ void FitnessExperiment::processBinaryMessage(QByteArray message)
         accYStd = qSqrt(accYStd / (accelerometerReadings.size() - 1));
         accZStd = qSqrt(accZStd / (accelerometerReadings.size() - 1));
 
+
+        //find min/max for axes for gyroscope
 
         gyrTsMin = gyroscopeReadings.at(0).timestamp;
         gyrXMin = gyroscopeReadings.at(0).x;
@@ -413,7 +380,7 @@ void FitnessExperiment::processBinaryMessage(QByteArray message)
         gyrYAvg /= gyroscopeReadings.size();
         gyrZAvg /= gyroscopeReadings.size();
 
-        //calculate std
+        //calculate std for gyroscope
 
         for (int i = 0; i < gyroscopeReadings.size(); ++i) {
             gyrXStd += qPow(gyroscopeReadings.at(i).x - gyrXAvg, 2);
@@ -425,53 +392,9 @@ void FitnessExperiment::processBinaryMessage(QByteArray message)
         gyrYStd = qSqrt(gyrYStd / (gyroscopeReadings.size() - 1));
         gyrZStd = qSqrt(gyrZStd / (gyroscopeReadings.size() - 1));
 
-        qDebug() << "Emitting...";
-
-        emit loadAnalysisPage();
+        emit loadAnalysisPage();    //caught in analyzeexperiment.qml
     }
-
-    // clientSocket->close();
 }
-
-// void FitnessExperiment::setAccTsMin(float ts)
-// {
-//     accTsMin = ts;
-// }
-
-// void FitnessExperiment::setAccTsMax(float ts)
-// {
-//     accTsMax = ts;
-// }
-
-// void FitnessExperiment::setAccXMin(float x)
-// {
-//     accXMin = x;
-// }
-
-// void FitnessExperiment::setAccXMax(float x)
-// {
-//     accXMax = x;
-// }
-
-// void FitnessExperiment::setAccYMin(float y)
-// {
-//     accYMin = y;
-// }
-
-// void FitnessExperiment::setAccYMax(float y)
-// {
-//     accYMax = y;
-// }
-
-// void FitnessExperiment::setAccZMin(float z)
-// {
-//     accZMin = z;
-// }
-
-// void FitnessExperiment::setAccZMax(float z)
-// {
-//     accZMax = z;
-// }
 
 float FitnessExperiment::getAccTsMin()
 {
@@ -512,46 +435,6 @@ float FitnessExperiment::getAccZMax()
 {
     return accZMax;
 }
-
-// void FitnessExperiment::setGyrTsMin(float ts)
-// {
-//     gyrTsMin = ts;
-// }
-
-// void FitnessExperiment::setGyrTsMax(float ts)
-// {
-//     gyrTsMax = ts;
-// }
-
-// void FitnessExperiment::setGyrXMin(float x)
-// {
-//     gyrXMin = x;
-// }
-
-// void FitnessExperiment::setGyrXMax(float x)
-// {
-//     gyrXMax = x;
-// }
-
-// void FitnessExperiment::setGyrYMin(float y)
-// {
-//     gyrYMin = y;
-// }
-
-// void FitnessExperiment::setGyrYMax(float y)
-// {
-//     gyrYMax = y;
-// }
-
-// void FitnessExperiment::setGyrZMin(float z)
-// {
-//     gyrZMin = z;
-// }
-
-// void FitnessExperiment::setGyrZMax(float z)
-// {
-//     gyrZMax = z;
-// }
 
 float FitnessExperiment::getGyrTsMin()
 {
@@ -604,11 +487,9 @@ QStringList FitnessExperiment::getFilenames()
     return filenames;
 }
 
-void FitnessExperiment::cancelExperiment()
+void FitnessExperiment::cancelExperiment()  // redundant function! improvement: make clearParameters Q_INVOKABLE
 {
     clearParameters();
-
-    // clientSocket->close();
 }
 
 void FitnessExperiment::clearParameters()
@@ -624,18 +505,11 @@ void FitnessExperiment::clearParameters()
     timestamp       = 0;
 }
 
-// void FitnessExperiment::setFilenames(const QStringList &list)
-// {
-//     emit loadSelectExperimentPage();
-// }
-
 void FitnessExperiment::loadFilenames()
 {
-    // while (clientSocket->state() != QAbstractSocket::ConnectedState)
-    //     continue;
+    //function called from selectexperiment.qml
 
-    qDebug() << "load filenames";
-
+    //clear previously loaded filenames
     filenames.clear();
 
     QJsonObject getFilenamesObj;
@@ -645,36 +519,23 @@ void FitnessExperiment::loadFilenames()
     document.setObject(getFilenamesObj);
 
     clientSocket->sendBinaryMessage(document.toJson());
-    // clientSocket->close();
 }
 
 void FitnessExperiment::loadExperiment(QString filename)
 {
-    qDebug() << "load experiment";
+    //function called from analyzeexperiment.qml
 
-    clearParameters();
-    clearLoadExperimentRanges();
+    clearParameters();              //clear parameters from previously loaded experiment
+    clearLoadExperimentRanges();    //clear axes ranges from charts
 
     QJsonObject getExperiment;
     getExperiment.insert("mode", "getExperiment");
     getExperiment.insert("filename", filename);
 
-    qDebug() << getExperiment;
-
     QJsonDocument document;
     document.setObject(getExperiment);
 
-    qDebug() << clientSocket->state();
-
-    // while (clientSocket->state() != QAbstractSocket::ConnectedState)
-    //     continue;
-
-    if (clientSocket->isValid())
-        qDebug() << "Client is valid!";
-
     clientSocket->sendBinaryMessage(document.toJson());
-
-    qDebug() << "message sent!";
 }
 
 void FitnessExperiment::clearLoadExperimentRanges()
@@ -696,11 +557,16 @@ void FitnessExperiment::clearLoadExperimentRanges()
     gyrYMax = 0;
     gyrZMin = 0;
     gyrZMax = 0;
+
+    //avgs and stds needn't be cleared, since they're being set in processBinaryMessage
 }
 
 QString FitnessExperiment::getCalculatedData(uint sensorMode, uint coordinateMode)
 {
-    //calculate average, standard deviation, add min and max to string
+    //calculate average, standard deviation, add min and max to string for charts page
+    //sensorMode values: 1 -> acc; 2 -> gyr
+    //coordinateMode values: 1 -> x; 2 -> y; 3 -> z
+    //improvement: enums
 
     float min = 0, max = 0, average = 0, standardDeviation = 0;
 

@@ -22,8 +22,9 @@ int main(int argc, char *argv[])
         },
         Qt::QueuedConnection);
 
+    //register an instance of FitnessExperiment in QML
+    //application starts and immediately connects to server. connection is open until app stops running.
     FitnessExperiment *fitnessExperiment = new FitnessExperiment();
-
     qmlRegisterSingletonInstance<FitnessExperiment>("com.company.fitnessExperiment", 1, 0, "FitnessExperiment", fitnessExperiment);
 
     engine.load(url);

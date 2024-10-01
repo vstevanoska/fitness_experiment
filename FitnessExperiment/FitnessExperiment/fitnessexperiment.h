@@ -36,6 +36,8 @@ class FitnessExperiment : public QObject
 public:
     explicit FitnessExperiment(QObject *parent = nullptr);
 
+    //setters
+
     Q_INVOKABLE void addAccReading(const float &timestampTemp, const float &xTemp, const float &yTemp, const float &zTemp);
     Q_INVOKABLE void addGyrReading(const float &timestampTemp, const float &xTemp, const float &yTemp, const float &zTemp);
     Q_INVOKABLE void setUser(const QString &userTemp);
@@ -44,7 +46,9 @@ public:
     Q_INVOKABLE void setFrequency(const uint &freqTemp);
     Q_INVOKABLE void setSpeed(const QString &speedTemp);
     Q_INVOKABLE void setTimestamp(const quint64 &timestampTemp);
-    // void setFilenames(const QStringList &list);
+
+
+    //getters
 
     Q_INVOKABLE QVector<AccelerometerReading> *getAccReadings();
     Q_INVOKABLE QVector<GyroscopeReading> *getGyrReadings();
@@ -54,9 +58,6 @@ public:
     Q_INVOKABLE uint getFrequency();
     Q_INVOKABLE QString getSpeed();
     Q_INVOKABLE qint64 getTimestamp();
-
-    Q_INVOKABLE void sendToServer();
-    Q_INVOKABLE void cancelExperiment();
 
     Q_INVOKABLE int getAccReadingsSize();
     Q_INVOKABLE int getGyrReadingsSize();
@@ -71,26 +72,6 @@ public:
     Q_INVOKABLE float getGyrYAt(int index);
     Q_INVOKABLE float getGyrZAt(int index);
 
-    void onConnected();
-    void clearParameters();
-
-    // void clearLoadExperimentVectors();
-
-    Q_INVOKABLE void clearVectors();
-
-    Q_INVOKABLE void loadFilenames();
-    Q_INVOKABLE QStringList getFilenames();
-    Q_INVOKABLE void loadExperiment(QString filename);
-
-    // Q_INVOKABLE void setAccTsMin(float ts);
-    // Q_INVOKABLE void setAccTsMax(float ts);
-    // Q_INVOKABLE void setAccXMin(float x);
-    // Q_INVOKABLE void setAccXMax(float x);
-    // Q_INVOKABLE void setAccYMin(float y);
-    // Q_INVOKABLE void setAccYMax(float y);
-    // Q_INVOKABLE void setAccZMin(float z);
-    // Q_INVOKABLE void setAccZMax(float z);
-
     Q_INVOKABLE float getAccTsMin();
     Q_INVOKABLE float getAccTsMax();
     Q_INVOKABLE float getAccXMin();
@@ -99,15 +80,6 @@ public:
     Q_INVOKABLE float getAccYMax();
     Q_INVOKABLE float getAccZMin();
     Q_INVOKABLE float getAccZMax();
-
-    // Q_INVOKABLE void setGyrTsMin(float ts);
-    // Q_INVOKABLE void setGyrTsMax(float ts);
-    // Q_INVOKABLE void setGyrXMin(float x);
-    // Q_INVOKABLE void setGyrXMax(float x);
-    // Q_INVOKABLE void setGyrYMin(float y);
-    // Q_INVOKABLE void setGyrYMax(float y);
-    // Q_INVOKABLE void setGyrZMin(float z);
-    // Q_INVOKABLE void setGyrZMax(float z);
 
     Q_INVOKABLE float getGyrTsMin();
     Q_INVOKABLE float getGyrTsMax();
@@ -120,6 +92,20 @@ public:
 
     Q_INVOKABLE QString getCalculatedData(uint sensorMode, uint coordinateMode);
 
+    Q_INVOKABLE QStringList getFilenames();
+
+
+    Q_INVOKABLE void sendToServer();        //sends recorded data from experiment to server
+    Q_INVOKABLE void cancelExperiment();    //redundant
+
+    void onConnected();
+    void clearParameters();
+
+    Q_INVOKABLE void clearVectors();
+
+    Q_INVOKABLE void loadFilenames();
+    Q_INVOKABLE void loadExperiment(QString filename);
+
     void clearLoadExperimentRanges();
 
 signals:
@@ -129,9 +115,6 @@ signals:
 private:
     void processBinaryMessage(QByteArray message);
 
-
-signals:
-
 private:
     QVector<AccelerometerReading> accelerometerReadings;
     QVector<GyroscopeReading> gyroscopeReadings;
@@ -140,10 +123,11 @@ private:
     QString experimentType;
     uint frequency;
     QString speed;
-    QJsonDocument document;
-    QWebSocket *clientSocket;
     qint64 timestamp;
     QStringList filenames;
+
+    QJsonDocument document;
+    QWebSocket *clientSocket;
 
     QVector<float> loadExperimentTimestampsStart;
     QVector<float> loadExperimentTimestampsEnd;
