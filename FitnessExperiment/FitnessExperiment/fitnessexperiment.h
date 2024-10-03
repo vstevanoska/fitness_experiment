@@ -98,15 +98,15 @@ public:
     Q_INVOKABLE void sendToServer();        //sends recorded data from experiment to server
     Q_INVOKABLE void cancelExperiment();    //redundant
 
-    void onConnected();
-    void clearParameters();
+    void onConnected();         //websockets slot
+    void clearParameters();     //clear experiment parameters
 
-    Q_INVOKABLE void clearVectors();
+    Q_INVOKABLE void clearVectors();    //clear only accelerometer and gyroscope vectors
 
-    Q_INVOKABLE void loadFilenames();
-    Q_INVOKABLE void loadExperiment(QString filename);
+    Q_INVOKABLE void loadFilenames();                   //get filenames from server
+    Q_INVOKABLE void loadExperiment(QString filename);  //get specific experiment data from server
 
-    void clearLoadExperimentRanges();
+    void clearLoadExperimentRanges();   //clear avg and std values
 
 signals:
     void loadSelectExperimentPage();
@@ -128,15 +128,6 @@ private:
 
     QJsonDocument document;
     QWebSocket *clientSocket;
-
-    QVector<float> loadExperimentTimestampsStart;
-    QVector<float> loadExperimentTimestampsEnd;
-
-    QVector<float> loadExperimentAccStart;
-    QVector<float> loadExperimentAccEnd;
-
-    QVector<float> loadExperimentGyrStart;
-    QVector<float> loadExperimentGyrEnd;
 
     float accTsMin;
     float accTsMax;

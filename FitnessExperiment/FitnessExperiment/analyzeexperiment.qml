@@ -18,13 +18,14 @@ Rectangle {
     property string popupString: ""
 
     readonly property int leftMargin: 20
-    // readonly property int textFontSize: 20
 
     Component.onCompleted: FitnessExperiment.loadExperiment(filename);
 
     Connections {
         target: FitnessExperiment
         onLoadAnalysisPage: {
+
+            //json object with selected experiment data has been returned, so variables can be loaded
 
             user = FitnessExperiment.getUser();
             experimentName = FitnessExperiment.getExperimentName();
@@ -33,6 +34,7 @@ Rectangle {
             frequency = FitnessExperiment.getFrequency();
             timestamp = FitnessExperiment.getTimestamp();
 
+            //popup window string
             popupString = popupString.concat("User: \t\t", user, "\nExperiment name: \t", experimentName,
                                              "\nExperiment type: \t", experimentType, "\nFrequency: \t\t", frequency,
                                              "Hz\nSpeed: \t\t", speed, "\nTimestamp: \t", new Date(timestamp));
@@ -42,22 +44,20 @@ Rectangle {
 
             //draw the acc charts
 
-            //x-chart
-            // chartView1.axes[0].min = FitnessExperiment.getAccTsMin();
-            // chartView1.axes[0].max = FitnessExperiment.getAccTsMax();
+            //x coordinate chart
 
             chartView1.axes[0].min = calculateTimepoint(FitnessExperiment.getAccTsMin(), FitnessExperiment.getAccTsMin());
             chartView1.axes[0].max = calculateTimepoint(FitnessExperiment.getAccTsMin(), FitnessExperiment.getAccTsMax());
             chartView1.axes[1].min = FitnessExperiment.getAccXMin();
             chartView1.axes[1].max = FitnessExperiment.getAccXMax();
 
-            //y-chart
+            //y coordinate chart
             chartView2.axes[0].min = chartView1.axes[0].min;
             chartView2.axes[0].max = chartView1.axes[0].max;
             chartView2.axes[1].min = FitnessExperiment.getAccYMin();
             chartView2.axes[1].max = FitnessExperiment.getAccYMax();
 
-            //z-chart
+            //z coordinate chart
             chartView3.axes[0].min = chartView1.axes[0].min;
             chartView3.axes[0].max = chartView1.axes[0].max;
             chartView3.axes[1].min = FitnessExperiment.getAccZMin();
@@ -65,11 +65,12 @@ Rectangle {
 
             for (var i = 0; i < FitnessExperiment.getAccReadingsSize(); ++i) {
 
-                // let ts = FitnessExperiment.getAccTimestampAt(i);
                 let ts = calculateTimepoint(FitnessExperiment.getAccTsMin(), FitnessExperiment.getAccTimestampAt(i));
                 let x = FitnessExperiment.getAccXAt(i);
                 let y = FitnessExperiment.getAccYAt(i);
                 let z = FitnessExperiment.getAccZAt(i);
+
+                //append datapoint to lineseries object
 
                 chartView1.series(0).append(ts, x);
                 chartView2.series(0).append(ts, y);
@@ -83,19 +84,19 @@ Rectangle {
 
             //draw the gyr charts
 
-            //x-chart
+            //x coordinate chart
             chartView4.axes[0].min = calculateTimepoint(FitnessExperiment.getGyrTsMin(), FitnessExperiment.getGyrTsMin());
             chartView4.axes[0].max = calculateTimepoint(FitnessExperiment.getGyrTsMin(), FitnessExperiment.getGyrTsMax());
             chartView4.axes[1].min = FitnessExperiment.getGyrXMin();
             chartView4.axes[1].max = FitnessExperiment.getGyrXMax();
 
-            //y-chart
+            //y coordinate chart
             chartView5.axes[0].min = chartView4.axes[0].min;
             chartView5.axes[0].max = chartView4.axes[0].max;
             chartView5.axes[1].min = FitnessExperiment.getGyrYMin();
             chartView5.axes[1].max = FitnessExperiment.getGyrYMax();
 
-            //z-chart
+            //z coordinate chart
             chartView6.axes[0].min = chartView4.axes[0].min;
             chartView6.axes[0].max = chartView4.axes[0].max;
             chartView6.axes[1].min = FitnessExperiment.getGyrZMin();
@@ -146,7 +147,11 @@ Rectangle {
     //     return timestamp;
     // }
 
+
     //returns seconds
+
+    //the timestamp of the first measurement done with each sensor is a fixed point in microseconds,
+    //and each timestamp after that is the offset from that fixed point.
 
     function calculateTimepoint(fixedPoint, currentPoint) {
         return (currentPoint - fixedPoint) / 1000000; //turn microseconds to seconds
@@ -154,8 +159,6 @@ Rectangle {
 
     ColumnLayout {
 
-        // Layout.fillWidth: true
-        // anchors.fill: parent
         spacing: 6
 
         RowLayout {
@@ -164,8 +167,6 @@ Rectangle {
 
             Text {
                 id: analysisTitle
-                // anchors.fill: parent
-                // text: FitnessExperiment.getUser()
                 font.weight: Font.ExtraBold
                 font.family: georgiaFont.name
                 font.pixelSize: buttonFontSize
@@ -173,8 +174,6 @@ Rectangle {
 
             Button {
                 id: informationButton
-                // anchors.fill: parent
-                // onClicked: console.log(FitnessExperiment.getAccReadingsSize())
                 Layout.preferredWidth: 24
                 Layout.preferredHeight: 24
                 icon.source: "qrc:/images/info.png"
@@ -185,7 +184,6 @@ Rectangle {
                     color: "#F4F4FB"
                 }
 
-                // background: "white"
                 visible: false
 
                 onClicked: {
@@ -195,13 +193,8 @@ Rectangle {
                 }
             }
 
-            // Layout.preferredWidth: parent.width
             Layout.fillWidth: true
-            // fillWidth: true
-            // alignment: Qt.AlignCenter
-            // Layout.bottomMargin: leftMargin * 2
             Layout.alignment: Qt.AlignCenter
-            // Layout.preferredHeight: 50
         }
 
         ScrollView {
@@ -239,7 +232,6 @@ Rectangle {
                     }
 
                     LineSeries {
-                        // name: "TestSeries"
                         axisX: axisX1
                         axisY: axisY1
                     }
@@ -247,8 +239,6 @@ Rectangle {
 
                 Text {
                     id: chart1Text
-
-                    // text: "Chart 1"
 
                     font.family: georgiaFont.name
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -274,8 +264,6 @@ Rectangle {
                     }
 
                     LineSeries {
-                        // name: "TestSeries"
-
                         axisX: axisX2
                         axisY: axisY2
                     }
@@ -283,8 +271,6 @@ Rectangle {
 
                 Text {
                     id: chart2Text
-
-                    // text: "Chart 2"
 
                     font.family: georgiaFont.name
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -310,8 +296,6 @@ Rectangle {
                     }
 
                     LineSeries {
-                        // name: "TestSeries"
-
                         axisX: axisX3
                         axisY: axisY3
                     }
@@ -319,8 +303,6 @@ Rectangle {
 
                 Text {
                     id: chart3Text
-
-                    // text: "Chart 3"
 
                     font.family: georgiaFont.name
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -346,8 +328,6 @@ Rectangle {
                     }
 
                     LineSeries {
-                        // name: "TestSeries"
-
                         axisX: axisX4
                         axisY: axisY4
                     }
@@ -355,8 +335,6 @@ Rectangle {
 
                 Text {
                     id: chart4Text
-
-                    // text: "Chart 4"
 
                     font.family: georgiaFont.name
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -382,8 +360,6 @@ Rectangle {
                     }
 
                     LineSeries {
-                        // name: "TestSeries"
-
                         axisX: axisX5
                         axisY: axisY5
                     }
@@ -391,8 +367,6 @@ Rectangle {
 
                 Text {
                     id: chart5Text
-
-                    // text: "Chart 5"
 
                     font.family: georgiaFont.name
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -418,8 +392,6 @@ Rectangle {
                     }
 
                     LineSeries {
-                        // name: "TestSeries"
-
                         axisX: axisX6
                         axisY: axisY6
                     }
@@ -427,8 +399,6 @@ Rectangle {
 
                 Text {
                     id: chart6Text
-
-                    // text: "Chart 6"
 
                     font.family: georgiaFont.name
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -472,8 +442,6 @@ Rectangle {
                 id: popupText
                 font.family: georgiaFont.name
                 font.pixelSize: 12
-
-                // text: "Hi there!"
             }
 
             closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
