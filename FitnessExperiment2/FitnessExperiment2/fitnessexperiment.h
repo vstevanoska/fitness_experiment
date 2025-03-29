@@ -45,7 +45,7 @@ public:
     Q_INVOKABLE void setFrequency(const uint &freqTemp);
     Q_INVOKABLE void setSpeed(const QString &speedTemp);
     Q_INVOKABLE void setTimestamp(const quint64 &timestampTemp);
-
+    Q_INVOKABLE void setNumberOfReps(const int &numberOfRepsTemp);
 
     //getters
 
@@ -124,6 +124,7 @@ private:
     QString speed;
     qint64 timestamp;
     QStringList filenames;
+    int numberOfReps;
 
     QJsonDocument document;
     QWebSocket *clientSocket;

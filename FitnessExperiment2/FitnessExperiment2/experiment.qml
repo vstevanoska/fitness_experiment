@@ -133,17 +133,55 @@ Rectangle {
             }
         }
 
-        MessageDialog
-        {
+        // MessageDialog
+        // {
+        //     id: saveExperimentDialog
+        //     title: "Save Experiment"
+        //     text: "Would you like to save the recorded experiment?"
+
+        //     standardButtons: StandardButton.Yes | StandardButton.No
+
+        //     visible: false
+
+        //     onYes: {
+
+        //         FitnessExperiment.sendToServer();
+        //         stack.pop();
+        //     }
+
+        //     onNo: {
+
+        //         FitnessExperiment.cancelExperiment();   //cancelExperiment() is redundant
+        //         stack.pop();
+        //     }
+        // }
+
+        Dialog {
+
             id: saveExperimentDialog
             title: "Save Experiment"
-            text: "Would you like to save the recorded experiment?"
+            // text: "Would you like to save the recorded experiment?"
 
             standardButtons: StandardButton.Yes | StandardButton.No
+
+            Column {
+                anchors.fill: parent
+                Text {
+                    text: "Would you like to save the recorded experiment?"
+                    height: 40
+                }
+                TextField {
+                    id: numberOfReps
+                    width: parent.width * 0.75
+                    focus: true
+                }
+            }
 
             visible: false
 
             onYes: {
+
+                FitnessExperiment.setNumberOfReps(numberOfReps.text);
 
                 FitnessExperiment.sendToServer();
                 stack.pop();

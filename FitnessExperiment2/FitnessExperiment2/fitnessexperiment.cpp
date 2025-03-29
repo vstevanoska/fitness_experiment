@@ -101,6 +101,10 @@ float FitnessExperiment::getAccZAt(int index)
     return accelerometerReadings.at(index).z;
 }
 
+void FitnessExperiment::setNumberOfReps(const int &numberOfRepsTemp)
+{
+    numberOfReps = numberOfRepsTemp;
+}
 
 QVector<GyroscopeReading> * FitnessExperiment::getGyrReadings()
 {
@@ -176,6 +180,7 @@ void FitnessExperiment::sendToServer()
     root.insert("frequency", (int)frequency);
     root.insert("speed", speed);
     root.insert("timestamp", timestamp);
+    root.insert("numberOfReps", numberOfReps);
 
     //prepare the two measurement arrays
     QJsonArray accMeasurements;
