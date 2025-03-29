@@ -2,7 +2,8 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.12
-// import com.company.fitnessExperiment 1.0
+
+import com.company.fitnessExperiment 1.0
 
 Rectangle {
     id: root
@@ -10,12 +11,12 @@ Rectangle {
     readonly property int leftMargin: 20
     readonly property int textFontSize: 20
 
-    // Component.onCompleted: FitnessExperiment.loadFilenames();
+    Component.onCompleted: FitnessExperiment.loadFilenames();
 
-    // Connections {
-    //     target: FitnessExperiment
-    //     onLoadSelectExperimentPage: experimentList.model = FitnessExperiment.getFilenames();
-    // }
+    Connections {
+        target: FitnessExperiment
+        onLoadSelectExperimentPage: experimentList.model = FitnessExperiment.getFilenames();
+    }
 
     ColumnLayout {
         Text {

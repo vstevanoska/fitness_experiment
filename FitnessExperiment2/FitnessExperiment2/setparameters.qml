@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.12
 
-// import com.company.fitnessExperiment 1.0
+import com.company.fitnessExperiment 1.0
 
 Rectangle {
     id: root
@@ -211,11 +211,11 @@ Rectangle {
 
                     //set starting parameters for the experiment
 
-                    // FitnessExperiment.setUser(userCb.currentText);
-                    // FitnessExperiment.setExperimentName(experimentTextField.text);
-                    // FitnessExperiment.setExperimentType(exerciseCb.currentText);
-                    // FitnessExperiment.setFrequency(Number(frequencyCb.currentText));
-                    // FitnessExperiment.setSpeed(speedCb.currentText);
+                    FitnessExperiment.setUser(userCb.currentText);
+                    FitnessExperiment.setExperimentName(experimentTextField.text);
+                    FitnessExperiment.setExperimentType(exerciseCb.currentText);
+                    FitnessExperiment.setFrequency(Number(frequencyCb.currentText));
+                    FitnessExperiment.setSpeed(speedCb.currentText);
 
                     stack.push("qrc:/experiment.qml");
                 }

@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.15
 import QtSensors 5.0
 import QtGraphicalEffects 1.12
 
-// import com.company.fitnessExperiment 1.0
+import com.company.fitnessExperiment 1.0
 
 ApplicationWindow {
     title: "Fitness Monitor"

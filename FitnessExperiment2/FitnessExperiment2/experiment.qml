@@ -4,7 +4,8 @@ import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.12
 import QtSensors 5.0
 import QtQuick.Dialogs 1.2
-// import com.company.fitnessExperiment 1.0
+
+import com.company.fitnessExperiment 1.0
 
 Rectangle {
     id: root
@@ -15,8 +16,8 @@ Rectangle {
     readonly property int leftMargin: 20
     property bool startCountdown: false
     property int timerValue: 5
-    // property string exerciseCombo: FitnessExperiment.getExperimentType()
-    // property int sampleRate: FitnessExperiment.getFrequency()
+    property string exerciseCombo: FitnessExperiment.getExperimentType()
+    property int sampleRate: FitnessExperiment.getFrequency()
     property AccelerometerReading currentAccReading: null
     property GyroscopeReading currentGyrReading: null
 
@@ -101,8 +102,8 @@ Rectangle {
 
                     } else {    //else, if the timer has counted down from 5
 
-                        // FitnessExperiment.setTimestamp(Date.now()); //set the starting time
-                        // FitnessExperiment.clearVectors();           //clear acc and gyr vectors
+                        FitnessExperiment.setTimestamp(Date.now()); //set the starting time
+                        FitnessExperiment.clearVectors();           //clear acc and gyr vectors
 
                         timer.interval = 1000 / sampleRate;
                         timerValue = 30;
@@ -119,15 +120,15 @@ Rectangle {
 
                 if (startCountdown && currentAccReading != null) {      //if the experiment has started and there is a valid current reading
 
-                    // if (FitnessExperiment.getAccReadingsSize() < sampleRate * 30) {
-                    //     FitnessExperiment.addAccReading(currentAccReading.timestamp, currentAccReading.x, currentAccReading.y, currentAccReading.z);
+                    if (FitnessExperiment.getAccReadingsSize() < sampleRate * 30) {
+                        FitnessExperiment.addAccReading(currentAccReading.timestamp, currentAccReading.x, currentAccReading.y, currentAccReading.z);
 
-                    //     if (currentGyrReading != null)  //currentGyrReading isn't in the grandparent if statement, because it turns on slower than the accelerometer
-                    //         FitnessExperiment.addGyrReading(currentGyrReading.timestamp, currentGyrReading.x, currentGyrReading.y, currentGyrReading.z);
-                    // }
+                        if (currentGyrReading != null)  //currentGyrReading isn't in the grandparent if statement, because it turns on slower than the accelerometer
+                            FitnessExperiment.addGyrReading(currentGyrReading.timestamp, currentGyrReading.x, currentGyrReading.y, currentGyrReading.z);
+                    }
 
-                    // if (FitnessExperiment.getAccReadingsSize() % sampleRate == 0)
-                    //     timerValue--;   //counting down from 30
+                    if (FitnessExperiment.getAccReadingsSize() % sampleRate == 0)
+                        timerValue--;   //counting down from 30
                 }
             }
         }
@@ -144,13 +145,13 @@ Rectangle {
 
             onYes: {
 
-                // FitnessExperiment.sendToServer();
+                FitnessExperiment.sendToServer();
                 stack.pop();
             }
 
             onNo: {
 
-                // FitnessExperiment.cancelExperiment();   //cancelExperiment() is redundant
+                FitnessExperiment.cancelExperiment();   //cancelExperiment() is redundant
                 stack.pop();
             }
         }
@@ -182,7 +183,7 @@ Rectangle {
 
             onClicked: {
 
-                // FitnessExperiment.cancelExperiment();   //cancelExperiment() is redundant
+                FitnessExperiment.cancelExperiment();   //cancelExperiment() is redundant
                 stack.pop();
             }
         }

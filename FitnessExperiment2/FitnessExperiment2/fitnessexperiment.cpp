@@ -4,7 +4,7 @@
 #include <QJsonObject>
 #include <QFile>
 #include <QDateTime>
-// #include <QWebSocket>
+#include <QWebSocket>
 #include <QQmlEngine>
 #include <QQmlComponent>
 #include <QtMath>
@@ -12,11 +12,11 @@
 FitnessExperiment::FitnessExperiment(QObject *parent)
     : QObject{parent}
 {
-    // clientSocket = new QWebSocket();
-    // connect(clientSocket, &QWebSocket::connected, this, &FitnessExperiment::onConnected);
+    clientSocket = new QWebSocket();
+    connect(clientSocket, &QWebSocket::connected, this, &FitnessExperiment::onConnected);
     // connect(clientSocket, &QWebSocket::disconnected,    this, &FitnessExperiment::closed);
 
-    // clientSocket->open(QUrl("ws://192.168.10.123:1234"));   //if not connecting to server, ip has updated
+    clientSocket->open(QUrl("ws://192.168.10.123:1234"));   //if not connecting to server, ip has updated
 }
 
 void FitnessExperiment::addAccReading(const float &timestampTemp, const float &xTemp, const float &yTemp, const float &zTemp)
@@ -211,12 +211,12 @@ void FitnessExperiment::sendToServer()
 
     document.setObject(root);
 
-    // clientSocket->sendBinaryMessage(document.toJson());
+    clientSocket->sendBinaryMessage(document.toJson());
 }
 
 void FitnessExperiment::onConnected()
 {
-    // connect(clientSocket, &QWebSocket::binaryMessageReceived,    this, &FitnessExperiment::processBinaryMessage);
+    connect(clientSocket, &QWebSocket::binaryMessageReceived,    this, &FitnessExperiment::processBinaryMessage);
 }
 
 void FitnessExperiment::processBinaryMessage(QByteArray message)
@@ -518,7 +518,7 @@ void FitnessExperiment::loadFilenames()
     QJsonDocument document;
     document.setObject(getFilenamesObj);
 
-    // clientSocket->sendBinaryMessage(document.toJson());
+    clientSocket->sendBinaryMessage(document.toJson());
 }
 
 void FitnessExperiment::loadExperiment(QString filename)
@@ -535,7 +535,7 @@ void FitnessExperiment::loadExperiment(QString filename)
     QJsonDocument document;
     document.setObject(getExperiment);
 
-    // clientSocket->sendBinaryMessage(document.toJson());
+    clientSocket->sendBinaryMessage(document.toJson());
 }
 
 void FitnessExperiment::clearLoadExperimentRanges()
@@ -622,4 +622,3 @@ QString FitnessExperiment::getCalculatedData(uint sensorMode, uint coordinateMod
     return QString("Min: " + QString::number(min) + "   Max: " + QString::number(max) + "   Avg: " +
                    QString::number(average) + "   Std: " + QString::number(standardDeviation));
 }
-

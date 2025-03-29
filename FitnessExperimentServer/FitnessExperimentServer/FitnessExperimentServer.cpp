@@ -70,11 +70,12 @@ void FitnessExperimentServer::processBinaryMessage(QByteArray message)
 
         QDateTime currentDatetime = QDateTime::currentDateTime();
 
-        QString filePath = "C:\\Users\\Viktorija\\Desktop\\VR\\RV1\\FitnessExperimentServer\\FitnessExperimentServer\\data\\" +
+        QString filePath = "C:\\Users\\Viktorija\\Desktop\\VR\\RV1\\git\\FitnessExperimentServer\\FitnessExperimentServer\\data\\" +
                            root.value("user").toString() + "_" + QString::number(currentDatetime.date().year()) + "-" +
                            QString::number(currentDatetime.date().month()) + "-" + QString::number(currentDatetime.date().day()) +
                            "-" + QString::number(currentDatetime.time().hour()) + "-" + QString::number(currentDatetime.time().minute()) +
                            "-" + QString::number(currentDatetime.time().second()) + ".json";
+
 
         QFile saveFile(filePath);
 
@@ -128,7 +129,7 @@ void FitnessExperimentServer::processBinaryMessage(QByteArray message)
 
         QJsonArray files;
 
-        for (const QFileInfo &file : QDir("C:\\Users\\Viktorija\\Desktop\\VR\\RV1\\FitnessExperimentServer\\FitnessExperimentServer\\data").entryInfoList(QDir::Files)) {
+        for (const QFileInfo &file : QDir("C:\\Users\\Viktorija\\Desktop\\VR\\RV1\\git\\FitnessExperimentServer\\FitnessExperimentServer\\data").entryInfoList(QDir::Files)) {
 
             QJsonObject sendingFile;
             sendingFile.insert("filename", file.fileName());
@@ -140,6 +141,9 @@ void FitnessExperimentServer::processBinaryMessage(QByteArray message)
         rootSending.insert("mode", "getFilenames");
         sendingDocument.setObject(rootSending);
 
+        qDebug() << "In get filenames!";
+        qDebug() << rootSending;
+
         QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
 
         if (pClient)
@@ -147,7 +151,7 @@ void FitnessExperimentServer::processBinaryMessage(QByteArray message)
 
     } else if (root.value("mode").toString() == "getExperiment") {
 
-        QString filePath = "C:\\Users\\Viktorija\\Desktop\\VR\\RV1\\FitnessExperimentServer\\FitnessExperimentServer\\data\\" +
+        QString filePath = "C:\\Users\\Viktorija\\Desktop\\VR\\RV1\\git\\FitnessExperimentServer\\FitnessExperimentServer\\data\\" +
                            root.value("filename").toString();
 
         QFile readFile(filePath);
