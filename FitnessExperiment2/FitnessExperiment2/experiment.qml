@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.12
 import QtSensors 5.0
 import QtQuick.Dialogs 1.2
+import QtMultimedia 5.15
 
 import com.company.fitnessExperiment 1.0
 
@@ -35,6 +36,11 @@ Rectangle {
         // dataRate: sampleRate //needs to be tested with this again
 
         onReadingChanged: currentGyrReading = reading;
+    }
+
+    SoundEffect {
+        id: notificationSound
+        source: "qrc:/sounds/sound.wav"
     }
 
     ColumnLayout {
@@ -75,6 +81,8 @@ Rectangle {
             }
         }
 
+
+
         /*this timer overrides the sensors' sampling rate. since I was getting a constant sampling rate of around 100Hz, I
         chose to use this approach as a temporary solution. In the application, the timer first counts down from 5, upon which
         the experiment starts. Then, it counts down from 30, and every second it takes sampleRate samples and saves them in the
@@ -97,10 +105,14 @@ Rectangle {
                         gyrSensor.active = false;
                         timer.stop();
 
+                        notificationSound.play();
+
                         //ask user to save experiment
                         saveExperimentDialog.visible = true;
 
                     } else {    //else, if the timer has counted down from 5
+
+                        notificationSound.play();
 
                         FitnessExperiment.setTimestamp(Date.now()); //set the starting time
                         FitnessExperiment.clearVectors();           //clear acc and gyr vectors
