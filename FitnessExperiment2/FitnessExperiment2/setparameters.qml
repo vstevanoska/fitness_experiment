@@ -144,35 +144,6 @@ Rectangle {
         }
 
         RowLayout {
-
-            Layout.alignment: Qt.AlignCenter
-
-            Item {
-
-                Layout.preferredWidth: labelWidth
-
-                Text {
-                    id: speedText
-                    text: qsTr("Speed: ")
-                    font.family: georgiaFont.name
-                    font.pixelSize: textFontSize
-                    Layout.alignment: Qt.AlignBaseline
-                }
-            }
-
-            ComboBox {
-                id: speedCb
-                model: ["Normal", "Slow", "Fast"]
-                font.family: georgiaFont.name
-                font.pixelSize: textFontSize
-                Layout.preferredWidth: experimentTextField.width
-                Layout.alignment: Qt.AlignBaseline
-
-            }
-            Layout.bottomMargin: leftMargin * 3
-        }
-
-        RowLayout {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignCenter
 
@@ -215,7 +186,6 @@ Rectangle {
                     FitnessExperiment.setExperimentName(experimentTextField.text);
                     FitnessExperiment.setExperimentType(exerciseCb.currentText);
                     FitnessExperiment.setFrequency(Number(frequencyCb.currentText));
-                    FitnessExperiment.setSpeed(speedCb.currentText);
 
                     stack.push("qrc:/experiment.qml");
                 }

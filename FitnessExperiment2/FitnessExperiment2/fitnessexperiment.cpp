@@ -61,11 +61,6 @@ void FitnessExperiment::setFrequency(const uint &freqTemp)
     frequency = freqTemp;
 }
 
-void FitnessExperiment::setSpeed(const QString &speedTemp)
-{
-    speed = speedTemp;
-}
-
 void FitnessExperiment::setTimestamp(const quint64 &timestampTemp)
 {
     timestamp = timestampTemp;
@@ -157,11 +152,6 @@ uint FitnessExperiment::getFrequency()
     return frequency;
 }
 
-QString FitnessExperiment::getSpeed()
-{
-    return speed;
-}
-
 qint64 FitnessExperiment::getTimestamp()
 {
     return timestamp;
@@ -178,7 +168,6 @@ void FitnessExperiment::sendToServer()
     root.insert("experimentName", experimentName);
     root.insert("experimentType", experimentType);
     root.insert("frequency", (int)frequency);
-    root.insert("speed", speed);
     root.insert("timestamp", timestamp);
     root.insert("numberOfReps", numberOfReps);
 
@@ -252,7 +241,7 @@ void FitnessExperiment::processBinaryMessage(QByteArray message)
         user            = root.value("user").toString();
         experimentName  = root.value("experimentName").toString();
         experimentType  = root.value("experimentType").toString();
-        speed           = root.value("speed").toString();
+        // speed           = root.value("speed").toString();
         frequency       = root.value("frequency").toInt();
         timestamp       = (qint64) root.value("timestamp").toDouble();
 
@@ -505,7 +494,7 @@ void FitnessExperiment::clearParameters()
     user            = "";
     experimentName  = "";
     experimentType  = "";
-    speed           = "";
+    // speed           = "";
     frequency       = 0;
     timestamp       = 0;
 }

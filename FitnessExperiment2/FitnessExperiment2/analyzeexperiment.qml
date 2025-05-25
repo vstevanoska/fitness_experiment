@@ -12,7 +12,7 @@ Rectangle {
     property string user: ""
     property string experimentName: ""
     property string experimentType: ""
-    property string speed : ""
+    // property string speed : ""
     property int frequency: 0
     property var timestamp: 0
     property string popupString: ""
@@ -32,14 +32,12 @@ Rectangle {
             user = FitnessExperiment.getUser();
             experimentName = FitnessExperiment.getExperimentName();
             experimentType = FitnessExperiment.getExperimentType();
-            speed = FitnessExperiment.getSpeed();
             frequency = FitnessExperiment.getFrequency();
             timestamp = FitnessExperiment.getTimestamp();
 
-            //popup window string
             popupString = popupString.concat("User: \t\t", user, "\nExperiment name: \t", experimentName,
                                              "\nExperiment type: \t", experimentType, "\nFrequency: \t\t", frequency,
-                                             "Hz\nSpeed: \t\t", speed, "\nTimestamp: \t", new Date(timestamp));
+                                             "Hz\nTimestamp: \t", new Date(timestamp));
 
             analysisTitle.text = experimentName;
             informationButton.visible = true;
@@ -136,21 +134,6 @@ Rectangle {
 
         }
     }
-
-    //returns epoch
-
-    // function calculateTimepoint(timestamp, fixedPoint, currentPoint) {
-
-    //     if (fixedPoint === currentPoint)
-    //         return timestamp;
-
-    //     var difference = (currentPoint - fixedPoint) / 1000; //turn microseconds to ms
-
-    //     timestamp += difference;
-
-    //     return timestamp;
-    // }
-
 
     //returns seconds
 

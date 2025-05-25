@@ -43,7 +43,7 @@ public:
     Q_INVOKABLE void setExperimentName(const QString &nameTemp);
     Q_INVOKABLE void setExperimentType(const QString &typeTemp);
     Q_INVOKABLE void setFrequency(const uint &freqTemp);
-    Q_INVOKABLE void setSpeed(const QString &speedTemp);
+    // Q_INVOKABLE void setSpeed(const QString &speedTemp);
     Q_INVOKABLE void setTimestamp(const quint64 &timestampTemp);
     Q_INVOKABLE void setNumberOfReps(const int &numberOfRepsTemp);
 
@@ -55,7 +55,7 @@ public:
     Q_INVOKABLE QString getExperimentName();
     Q_INVOKABLE QString getExperimentType();
     Q_INVOKABLE uint getFrequency();
-    Q_INVOKABLE QString getSpeed();
+    // Q_INVOKABLE QString getSpeed();
     Q_INVOKABLE qint64 getTimestamp();
 
     Q_INVOKABLE int getAccReadingsSize();
@@ -121,7 +121,7 @@ private:
     QString experimentName;
     QString experimentType;
     uint frequency;
-    QString speed;
+    // QString speed;
     qint64 timestamp;
     QStringList filenames;
     int numberOfReps;
