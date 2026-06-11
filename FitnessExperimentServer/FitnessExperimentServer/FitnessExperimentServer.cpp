@@ -43,13 +43,8 @@ void FitnessExperimentServer::onNewConnection()
 
 void FitnessExperimentServer::processTextMessage(QString message)
 {
-    QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-
     if (debug)
         qDebug() << "Message received:" << message;
-
-    if (pClient)
-        pClient->sendTextMessage("Hello back to you!");
 }
 
 void FitnessExperimentServer::processBinaryMessage(QByteArray message)
@@ -57,15 +52,13 @@ void FitnessExperimentServer::processBinaryMessage(QByteArray message)
     if (debug)
         qDebug() << "Binary message received!";
 
-    QJsonDocument document = QJsonDocument::fromJson(message);
-    QJsonObject root = document.object();
+    const QJsonObject root = QJsonDocument::fromJson(message).object();
 
     if (root.value("mode").toString() == "save") {
 
-        QDateTime currentDatetime = QDateTime::currentDateTime();
+        const QDateTime currentDatetime = QDateTime::currentDateTime();
 
-        QString filePath = "C:\\Users\\Viktorija\\Desktop\\VR\\RV1\\git\\FitnessExperimentServer\\FitnessExperimentServer\\data\\" +
-                           root.value("user").toString() + "_" + QString::number(currentDatetime.date().year()) + "-" +
+        const QString filePath = dataFolderPath + root.value("user").toString() + "_" + QString::number(currentDatetime.date().year()) + "-" +
                            QString::number(currentDatetime.date().month()) + "-" + QString::number(currentDatetime.date().day()) +
                            "-" + QString::number(currentDatetime.time().hour()) + "-" + QString::number(currentDatetime.time().minute()) +
                            "-" + QString::number(currentDatetime.time().second()) + ".json";
@@ -82,17 +75,12 @@ void FitnessExperimentServer::processBinaryMessage(QByteArray message)
         outStream << message;
 
         saveFile.close();
-
     }
 
     else if (root.value("mode").toString() == "getFilenames") {
 
-        QJsonDocument sendingDocument;
-        QJsonObject rootSending;
-
         QJsonArray files;
-
-        for (const QFileInfo &file : QDir("C:\\Users\\Viktorija\\Desktop\\VR\\RV1\\git\\FitnessExperimentServer\\FitnessExperimentServer\\data").entryInfoList(QDir::Files)) {
+        for (const QFileInfo &file : QDir(dataFolderPath).entryInfoList(QDir::Files)) {
 
             QJsonObject sendingFile;
             sendingFile.insert("filename", file.fileName());
@@ -100,13 +88,13 @@ void FitnessExperimentServer::processBinaryMessage(QByteArray message)
             files.push_back(sendingFile);
         }
 
+        QJsonObject rootSending;
         rootSending.insert("files", files);
         rootSending.insert("mode", "getFilenames");
+
+        QJsonDocument sendingDocument;
         sendingDocument.setObject(rootSending);
-
-        qDebug() << "In get filenames!";
-        qDebug() << rootSending;
-
+        
         QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
 
         if (pClient)
@@ -114,8 +102,7 @@ void FitnessExperimentServer::processBinaryMessage(QByteArray message)
 
     } else if (root.value("mode").toString() == "getExperiment") {
 
-        QString filePath = "C:\\Users\\Viktorija\\Desktop\\VR\\RV1\\git\\FitnessExperimentServer\\FitnessExperimentServer\\data\\" +
-                           root.value("filename").toString();
+        QString filePath = dataFolderPath + root.value("filename").toString();
 
         QFile readFile(filePath);
 
@@ -124,7 +111,7 @@ void FitnessExperimentServer::processBinaryMessage(QByteArray message)
             return;
         }
 
-        QByteArray readData = readFile.readAll();
+        const QByteArray readData = readFile.readAll();
 
         QJsonDocument readingDocument = QJsonDocument::fromJson(readData);
         QJsonObject readingObject = readingDocument.object();
@@ -144,11 +131,11 @@ void FitnessExperimentServer::socketDisconnected()
 {
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
 
-    if (debug)
-        qDebug() << "Socket disconnected:" << pClient;
-
     if (pClient) {
         clients.removeAll(pClient);
         pClient->deleteLater();
     }
+
+    if (debug)
+        qDebug() << "Socket disconnected:" << pClient;
 }

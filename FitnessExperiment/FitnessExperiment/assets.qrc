@@ -5,5 +5,6 @@
         <file>images/dumbbell-triceps-extension-exercise-illustration.jpg</file>
         <file>images/dumbbell-triceps-kickback-exercise-illustration.jpg</file>
         <file>images/info.png</file>
+        <file>sounds/sound.wav</file>
     </qresource>
 </RCC>

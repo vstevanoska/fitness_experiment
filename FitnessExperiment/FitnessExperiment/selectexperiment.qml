@@ -2,7 +2,8 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.12
-// import com.company.fitnessExperiment 1.0
+
+import com.company.fitnessExperiment 1.0
 
 Rectangle {
     id: root
@@ -10,12 +11,12 @@ Rectangle {
     readonly property int leftMargin: 20
     readonly property int textFontSize: 20
 
-    // Component.onCompleted: FitnessExperiment.loadFilenames();
+    Component.onCompleted: FitnessExperiment.loadFilenames();
 
-    // Connections {
-    //     target: FitnessExperiment
-    //     onLoadSelectExperimentPage: experimentList.model = FitnessExperiment.getFilenames();
-    // }
+    Connections {
+        target: FitnessExperiment
+        onLoadSelectExperimentPage: experimentList.model = FitnessExperiment.getFilenames();
+    }
 
     ColumnLayout {
         Text {
@@ -25,7 +26,7 @@ Rectangle {
             Layout.leftMargin: leftMargin
             Layout.preferredWidth: stack.width
             text: "Experiments:"
-            color: "#5E69EE" //#39AFEA - accent
+            color: "#5E69EE"
             Layout.bottomMargin: backToMainScreen.height / 1.25
             font.weight: Font.ExtraBold
             font.family: georgiaFont.name
@@ -50,7 +51,7 @@ Rectangle {
                 height: 60
                 border.color: "black"
                 border.width:  1
-                z: experimentList.currentIndex === model.index ? 2 : 1      //check without
+                z: experimentList.currentIndex === model.index ? 2 : 1
 
                 Text {
                    id: experimentName

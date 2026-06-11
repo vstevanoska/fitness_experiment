@@ -1,5 +1,5 @@
-#ifndef FitnessExperiment_H
-#define FitnessExperiment_H
+#ifndef FITNESSEXPERIMENT_H
+#define FITNESSEXPERIMENT_H
 
 #include <QObject>
 #include <QString>
@@ -25,81 +25,73 @@ struct GyroscopeReading
     float z;
 };
 
-//object used for maintaining internal structure of experiment
 class FitnessExperiment : public QObject
 {
     Q_OBJECT
-
-    // Q_PROPERTY(QStringList filenames READ getFilenames WRITE setFilenames NOTIFY loadSelectExperimentPage)
-
 
 public:
     explicit FitnessExperiment(QObject *parent = nullptr);
 
     //setters
 
-    Q_INVOKABLE void addAccReading(const float &timestampTemp, const float &xTemp, const float &yTemp, const float &zTemp);
-    Q_INVOKABLE void addGyrReading(const float &timestampTemp, const float &xTemp, const float &yTemp, const float &zTemp);
+    Q_INVOKABLE void addAccReading(const float timestampTemp, const float xTemp, const float yTemp, const float zTemp);
+    Q_INVOKABLE void addGyrReading(const float timestampTemp, const float xTemp, const float yTemp, const float zTemp);
     Q_INVOKABLE void setUser(const QString &userTemp);
     Q_INVOKABLE void setExperimentName(const QString &nameTemp);
     Q_INVOKABLE void setExperimentType(const QString &typeTemp);
-    Q_INVOKABLE void setFrequency(const uint &freqTemp);
-    Q_INVOKABLE void setSpeed(const QString &speedTemp);
-    Q_INVOKABLE void setTimestamp(const quint64 &timestampTemp);
-
+    Q_INVOKABLE void setFrequency(const uint freqTemp);
+    Q_INVOKABLE void setTimestamp(const quint64 timestampTemp);
+    Q_INVOKABLE void setNumberOfReps(const int numberOfRepsTemp);
 
     //getters
 
     Q_INVOKABLE QVector<AccelerometerReading> *getAccReadings();
     Q_INVOKABLE QVector<GyroscopeReading> *getGyrReadings();
-    Q_INVOKABLE QString getUser();
-    Q_INVOKABLE QString getExperimentName();
-    Q_INVOKABLE QString getExperimentType();
-    Q_INVOKABLE uint getFrequency();
-    Q_INVOKABLE QString getSpeed();
-    Q_INVOKABLE qint64 getTimestamp();
+    Q_INVOKABLE QString getUser() const;
+    Q_INVOKABLE QString getExperimentName() const;
+    Q_INVOKABLE QString getExperimentType() const;
+    Q_INVOKABLE uint getFrequency() const;
+    Q_INVOKABLE qint64 getTimestamp() const;
 
-    Q_INVOKABLE int getAccReadingsSize();
-    Q_INVOKABLE int getGyrReadingsSize();
+    Q_INVOKABLE int getAccReadingsSize() const;
+    Q_INVOKABLE int getGyrReadingsSize() const;
 
-    Q_INVOKABLE float getAccTimestampAt(int index);
-    Q_INVOKABLE float getAccXAt(int index);
-    Q_INVOKABLE float getAccYAt(int index);
-    Q_INVOKABLE float getAccZAt(int index);
+    Q_INVOKABLE float getAccTimestampAt(int index) const;
+    Q_INVOKABLE float getAccXAt(int index) const;
+    Q_INVOKABLE float getAccYAt(int index) const;
+    Q_INVOKABLE float getAccZAt(int index) const;
 
-    Q_INVOKABLE float getGyrTimestampAt(int index);
-    Q_INVOKABLE float getGyrXAt(int index);
-    Q_INVOKABLE float getGyrYAt(int index);
-    Q_INVOKABLE float getGyrZAt(int index);
+    Q_INVOKABLE float getGyrTimestampAt(int index) const;
+    Q_INVOKABLE float getGyrXAt(int index) const;
+    Q_INVOKABLE float getGyrYAt(int index) const;
+    Q_INVOKABLE float getGyrZAt(int index) const;
 
-    Q_INVOKABLE float getAccTsMin();
-    Q_INVOKABLE float getAccTsMax();
-    Q_INVOKABLE float getAccXMin();
-    Q_INVOKABLE float getAccXMax();
-    Q_INVOKABLE float getAccYMin();
-    Q_INVOKABLE float getAccYMax();
-    Q_INVOKABLE float getAccZMin();
-    Q_INVOKABLE float getAccZMax();
+    Q_INVOKABLE float getAccTsMin() const;
+    Q_INVOKABLE float getAccTsMax() const;
+    Q_INVOKABLE float getAccXMin() const;
+    Q_INVOKABLE float getAccXMax() const;
+    Q_INVOKABLE float getAccYMin() const;
+    Q_INVOKABLE float getAccYMax() const;
+    Q_INVOKABLE float getAccZMin() const;
+    Q_INVOKABLE float getAccZMax() const;
 
-    Q_INVOKABLE float getGyrTsMin();
-    Q_INVOKABLE float getGyrTsMax();
-    Q_INVOKABLE float getGyrXMin();
-    Q_INVOKABLE float getGyrXMax();
-    Q_INVOKABLE float getGyrYMin();
-    Q_INVOKABLE float getGyrYMax();
-    Q_INVOKABLE float getGyrZMin();
-    Q_INVOKABLE float getGyrZMax();
+    Q_INVOKABLE float getGyrTsMin() const;
+    Q_INVOKABLE float getGyrTsMax() const;
+    Q_INVOKABLE float getGyrXMin() const;
+    Q_INVOKABLE float getGyrXMax() const;
+    Q_INVOKABLE float getGyrYMin() const;
+    Q_INVOKABLE float getGyrYMax() const;
+    Q_INVOKABLE float getGyrZMin() const;
+    Q_INVOKABLE float getGyrZMax() const;
 
-    Q_INVOKABLE QString getCalculatedData(uint sensorMode, uint coordinateMode);
+    Q_INVOKABLE QString getCalculatedData(uint sensorMode, uint coordinateMode) const;
 
-    Q_INVOKABLE QStringList getFilenames();
+    Q_INVOKABLE QStringList getFilenames() const;
 
-
-    Q_INVOKABLE void sendToServer();        //sends recorded data from experiment to server
-    Q_INVOKABLE void cancelExperiment();    //redundant
+    Q_INVOKABLE void sendToServer() const;  //sends recorded data from experiment to server
+    Q_INVOKABLE void clearParameters();     //clear experiment parameters
 
     void onConnected();         //websockets slot
-    void clearParameters();     //clear experiment parameters
 
     Q_INVOKABLE void clearVectors();    //clear only accelerometer and gyroscope vectors
 
@@ -122,44 +114,43 @@ private:
     QString experimentName;
     QString experimentType;
     uint frequency;
-    QString speed;
     qint64 timestamp;
     QStringList filenames;
+    int numberOfReps;
 
-    QJsonDocument document;
     QWebSocket *clientSocket;
 
-    float accTsMin;
-    float accTsMax;
-    float accXMin;
-    float accXMax;
-    float accYMin;
-    float accYMax;
-    float accZMin;
-    float accZMax;
+    float accTsMin = 0.0f;
+    float accTsMax = 0.0f;
+    float accXMin = 0.0f;
+    float accXMax = 0.0f;
+    float accYMin = 0.0f;
+    float accYMax = 0.0f;
+    float accZMin = 0.0f;
+    float accZMax = 0.0f;
 
-    float gyrTsMin;
-    float gyrTsMax;
-    float gyrXMin;
-    float gyrXMax;
-    float gyrYMin;
-    float gyrYMax;
-    float gyrZMin;
-    float gyrZMax;
+    float gyrTsMin = 0.0f;
+    float gyrTsMax = 0.0f;
+    float gyrXMin = 0.0f;
+    float gyrXMax = 0.0f;
+    float gyrYMin = 0.0f;
+    float gyrYMax = 0.0f;
+    float gyrZMin = 0.0f;
+    float gyrZMax = 0.0f;
 
-    float accXAvg;
-    float accYAvg;
-    float accZAvg;
-    float accXStd;
-    float accYStd;
-    float accZStd;
+    float accXAvg = 0.0f;
+    float accYAvg = 0.0f;
+    float accZAvg = 0.0f;
+    float accXStd; = 0.0f
+    float accYStd = 0.0f;
+    float accZStd = 0.0f;
 
-    float gyrXAvg;
-    float gyrYAvg;
-    float gyrZAvg;
-    float gyrXStd;
-    float gyrYStd;
-    float gyrZStd;
+    float gyrXAvg = 0.0f;
+    float gyrYAvg = 0.0f;
+    float gyrZAvg = 0.0f;
+    float gyrXStd = 0.0f;
+    float gyrYStd = 0.0f;
+    float gyrZStd = 0.0f;
 };
 
-#endif // FitnessExperiment_H
+#endif // FITNESSEXPERIMENT_H

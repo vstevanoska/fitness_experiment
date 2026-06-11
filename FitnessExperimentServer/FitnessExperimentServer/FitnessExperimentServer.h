@@ -24,6 +24,7 @@ private:
     QWebSocketServer *socketServer;
     QList<QWebSocket *> clients;
     bool debug;
+    const QString dataFolderPath = "C:\\Users\\Viktorija\\Desktop\\VR\\RV1\\FitnessExperimentServer\\FitnessExperimentServer\\data\\";
 };
 
 #endif // FITNESSEXPERIMENTSERVER_H

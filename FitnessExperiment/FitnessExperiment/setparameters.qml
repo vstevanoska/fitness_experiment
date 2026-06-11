@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.12
 
-// import com.company.fitnessExperiment 1.0
+import com.company.fitnessExperiment 1.0
 
 Rectangle {
     id: root
@@ -31,7 +31,7 @@ Rectangle {
             Layout.alignment: Qt.AlignCenter
             Layout.preferredHeight: titleHeight
             text: "New experiment"
-            color: "#5E69EE" //#39AFEA - accent
+            color: "#5E69EE"
             font.weight: Font.ExtraBold
             font.family: georgiaFont.name
             font.pixelSize: titleFontSize
@@ -144,35 +144,6 @@ Rectangle {
         }
 
         RowLayout {
-
-            Layout.alignment: Qt.AlignCenter
-
-            Item {
-
-                Layout.preferredWidth: labelWidth
-
-                Text {
-                    id: speedText
-                    text: qsTr("Speed: ")
-                    font.family: georgiaFont.name
-                    font.pixelSize: textFontSize
-                    Layout.alignment: Qt.AlignBaseline
-                }
-            }
-
-            ComboBox {
-                id: speedCb
-                model: ["Normal", "Slow", "Fast"]
-                font.family: georgiaFont.name
-                font.pixelSize: textFontSize
-                Layout.preferredWidth: experimentTextField.width
-                Layout.alignment: Qt.AlignBaseline
-
-            }
-            Layout.bottomMargin: leftMargin * 3
-        }
-
-        RowLayout {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignCenter
 
@@ -211,11 +182,10 @@ Rectangle {
 
                     //set starting parameters for the experiment
 
-                    // FitnessExperiment.setUser(userCb.currentText);
-                    // FitnessExperiment.setExperimentName(experimentTextField.text);
-                    // FitnessExperiment.setExperimentType(exerciseCb.currentText);
-                    // FitnessExperiment.setFrequency(Number(frequencyCb.currentText));
-                    // FitnessExperiment.setSpeed(speedCb.currentText);
+                    FitnessExperiment.setUser(userCb.currentText);
+                    FitnessExperiment.setExperimentName(experimentTextField.text);
+                    FitnessExperiment.setExperimentType(exerciseCb.currentText);
+                    FitnessExperiment.setFrequency(Number(frequencyCb.currentText));
 
                     stack.push("qrc:/experiment.qml");
                 }

@@ -1,9 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>main.qml</file>
-        <file>setparameters.qml</file>
-        <file>experiment.qml</file>
-        <file>selectexperiment.qml</file>
-        <file>analyzeexperiment.qml</file>
-    </qresource>
-</RCC>

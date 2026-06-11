@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtCharts 2.15
 
-// import com.company.fitnessExperiment 1.0
+import com.company.fitnessExperiment 1.0
 
 Rectangle {
     id: root
@@ -12,141 +12,122 @@ Rectangle {
     property string user: ""
     property string experimentName: ""
     property string experimentType: ""
-    property string speed : ""
     property int frequency: 0
     property var timestamp: 0
     property string popupString: ""
 
     readonly property int leftMargin: 20
 
-    // Component.onCompleted: FitnessExperiment.loadExperiment(filename);
+    Component.onCompleted: FitnessExperiment.loadExperiment(filename);
 
-    // Connections {
-    //     target: FitnessExperiment
-    //     onLoadAnalysisPage: {
+    Connections {
+        target: FitnessExperiment
+        onLoadAnalysisPage: {
 
-    //         //json object with selected experiment data has been returned, so variables can be loaded
+            //json object with selected experiment data has been returned, so variables can be loaded
 
-    //         user = FitnessExperiment.getUser();
-    //         experimentName = FitnessExperiment.getExperimentName();
-    //         experimentType = FitnessExperiment.getExperimentType();
-    //         speed = FitnessExperiment.getSpeed();
-    //         frequency = FitnessExperiment.getFrequency();
-    //         timestamp = FitnessExperiment.getTimestamp();
+            user = FitnessExperiment.getUser();
+            experimentName = FitnessExperiment.getExperimentName();
+            experimentType = FitnessExperiment.getExperimentType();
+            frequency = FitnessExperiment.getFrequency();
+            timestamp = FitnessExperiment.getTimestamp();
 
-    //         //popup window string
-    //         popupString = popupString.concat("User: \t\t", user, "\nExperiment name: \t", experimentName,
-    //                                          "\nExperiment type: \t", experimentType, "\nFrequency: \t\t", frequency,
-    //                                          "Hz\nSpeed: \t\t", speed, "\nTimestamp: \t", new Date(timestamp));
+            popupString = popupString.concat("User: \t\t", user, "\nExperiment name: \t", experimentName,
+                                             "\nExperiment type: \t", experimentType, "\nFrequency: \t\t", frequency,
+                                             "Hz\nTimestamp: \t", new Date(timestamp));
 
-    //         analysisTitle.text = experimentName;
-    //         informationButton.visible = true;
+            analysisTitle.text = experimentName;
+            informationButton.visible = true;
 
-    //         //draw the acc charts
+            //draw the acc charts
 
-    //         //x coordinate chart
+            //x coordinate chart
 
-    //         chartView1.axes[0].min = calculateTimepoint(FitnessExperiment.getAccTsMin(), FitnessExperiment.getAccTsMin());
-    //         chartView1.axes[0].max = calculateTimepoint(FitnessExperiment.getAccTsMin(), FitnessExperiment.getAccTsMax());
-    //         chartView1.axes[1].min = FitnessExperiment.getAccXMin();
-    //         chartView1.axes[1].max = FitnessExperiment.getAccXMax();
+            chartView1.axes[0].min = calculateTimepoint(FitnessExperiment.getAccTsMin(), FitnessExperiment.getAccTsMin());
+            chartView1.axes[0].max = calculateTimepoint(FitnessExperiment.getAccTsMin(), FitnessExperiment.getAccTsMax());
+            chartView1.axes[1].min = FitnessExperiment.getAccXMin();
+            chartView1.axes[1].max = FitnessExperiment.getAccXMax();
 
-    //         //y coordinate chart
-    //         chartView2.axes[0].min = chartView1.axes[0].min;
-    //         chartView2.axes[0].max = chartView1.axes[0].max;
-    //         chartView2.axes[1].min = FitnessExperiment.getAccYMin();
-    //         chartView2.axes[1].max = FitnessExperiment.getAccYMax();
+            //y coordinate chart
+            chartView2.axes[0].min = chartView1.axes[0].min;
+            chartView2.axes[0].max = chartView1.axes[0].max;
+            chartView2.axes[1].min = FitnessExperiment.getAccYMin();
+            chartView2.axes[1].max = FitnessExperiment.getAccYMax();
 
-    //         //z coordinate chart
-    //         chartView3.axes[0].min = chartView1.axes[0].min;
-    //         chartView3.axes[0].max = chartView1.axes[0].max;
-    //         chartView3.axes[1].min = FitnessExperiment.getAccZMin();
-    //         chartView3.axes[1].max = FitnessExperiment.getAccZMax();
+            //z coordinate chart
+            chartView3.axes[0].min = chartView1.axes[0].min;
+            chartView3.axes[0].max = chartView1.axes[0].max;
+            chartView3.axes[1].min = FitnessExperiment.getAccZMin();
+            chartView3.axes[1].max = FitnessExperiment.getAccZMax();
 
-    //         for (var i = 0; i < FitnessExperiment.getAccReadingsSize(); ++i) {
+            for (var i = 0; i < FitnessExperiment.getAccReadingsSize(); ++i) {
 
-    //             let ts = calculateTimepoint(FitnessExperiment.getAccTsMin(), FitnessExperiment.getAccTimestampAt(i));
-    //             let x = FitnessExperiment.getAccXAt(i);
-    //             let y = FitnessExperiment.getAccYAt(i);
-    //             let z = FitnessExperiment.getAccZAt(i);
+                let ts = calculateTimepoint(FitnessExperiment.getAccTsMin(), FitnessExperiment.getAccTimestampAt(i));
+                let x = FitnessExperiment.getAccXAt(i);
+                let y = FitnessExperiment.getAccYAt(i);
+                let z = FitnessExperiment.getAccZAt(i);
 
-    //             //append datapoint to lineseries object
+                //append datapoint to lineseries object
 
-    //             chartView1.series(0).append(ts, x);
-    //             chartView2.series(0).append(ts, y);
-    //             chartView3.series(0).append(ts, z);
-    //         }
+                chartView1.series(0).append(ts, x);
+                chartView2.series(0).append(ts, y);
+                chartView3.series(0).append(ts, z);
+            }
 
-    //         chartView1.update();
-    //         chartView2.update();
-    //         chartView3.update();
+            chartView1.update();
+            chartView2.update();
+            chartView3.update();
 
 
-    //         //draw the gyr charts
+            //draw the gyr charts
 
-    //         //x coordinate chart
-    //         chartView4.axes[0].min = calculateTimepoint(FitnessExperiment.getGyrTsMin(), FitnessExperiment.getGyrTsMin());
-    //         chartView4.axes[0].max = calculateTimepoint(FitnessExperiment.getGyrTsMin(), FitnessExperiment.getGyrTsMax());
-    //         chartView4.axes[1].min = FitnessExperiment.getGyrXMin();
-    //         chartView4.axes[1].max = FitnessExperiment.getGyrXMax();
+            //x coordinate chart
+            chartView4.axes[0].min = calculateTimepoint(FitnessExperiment.getGyrTsMin(), FitnessExperiment.getGyrTsMin());
+            chartView4.axes[0].max = calculateTimepoint(FitnessExperiment.getGyrTsMin(), FitnessExperiment.getGyrTsMax());
+            chartView4.axes[1].min = FitnessExperiment.getGyrXMin();
+            chartView4.axes[1].max = FitnessExperiment.getGyrXMax();
 
-    //         //y coordinate chart
-    //         chartView5.axes[0].min = chartView4.axes[0].min;
-    //         chartView5.axes[0].max = chartView4.axes[0].max;
-    //         chartView5.axes[1].min = FitnessExperiment.getGyrYMin();
-    //         chartView5.axes[1].max = FitnessExperiment.getGyrYMax();
+            //y coordinate chart
+            chartView5.axes[0].min = chartView4.axes[0].min;
+            chartView5.axes[0].max = chartView4.axes[0].max;
+            chartView5.axes[1].min = FitnessExperiment.getGyrYMin();
+            chartView5.axes[1].max = FitnessExperiment.getGyrYMax();
 
-    //         //z coordinate chart
-    //         chartView6.axes[0].min = chartView4.axes[0].min;
-    //         chartView6.axes[0].max = chartView4.axes[0].max;
-    //         chartView6.axes[1].min = FitnessExperiment.getGyrZMin();
-    //         chartView6.axes[1].max = FitnessExperiment.getGyrZMax();
+            //z coordinate chart
+            chartView6.axes[0].min = chartView4.axes[0].min;
+            chartView6.axes[0].max = chartView4.axes[0].max;
+            chartView6.axes[1].min = FitnessExperiment.getGyrZMin();
+            chartView6.axes[1].max = FitnessExperiment.getGyrZMax();
 
-    //         for (var j = 0; j < FitnessExperiment.getGyrReadingsSize(); ++j) {
+            for (var j = 0; j < FitnessExperiment.getGyrReadingsSize(); ++j) {
 
-    //             let ts = calculateTimepoint(FitnessExperiment.getGyrTsMin(), FitnessExperiment.getGyrTimestampAt(j));
-    //             let x = FitnessExperiment.getGyrXAt(j);
-    //             let y = FitnessExperiment.getGyrYAt(j);
-    //             let z = FitnessExperiment.getGyrZAt(j);
+                let ts = calculateTimepoint(FitnessExperiment.getGyrTsMin(), FitnessExperiment.getGyrTimestampAt(j));
+                let x = FitnessExperiment.getGyrXAt(j);
+                let y = FitnessExperiment.getGyrYAt(j);
+                let z = FitnessExperiment.getGyrZAt(j);
 
-    //             chartView4.series(0).append(ts, x);
-    //             chartView5.series(0).append(ts, y);
-    //             chartView6.series(0).append(ts, z);
-    //         }
+                chartView4.series(0).append(ts, x);
+                chartView5.series(0).append(ts, y);
+                chartView6.series(0).append(ts, z);
+            }
 
-    //         chartView4.update();
-    //         chartView5.update();
-    //         chartView6.update();
+            chartView4.update();
+            chartView5.update();
+            chartView6.update();
 
-    //         //update labels below every chart
+            //update labels below every chart
 
-    //         //first argument: sensor (1 -> acc; 2 -> gyr)
-    //         //second argument: coordinates (1 -> x; 2 -> y; 3 -> z)
+            //first argument: sensor (1 -> acc; 2 -> gyr)
+            //second argument: coordinates (1 -> x; 2 -> y; 3 -> z)
 
-    //         chart1Text.text = FitnessExperiment.getCalculatedData(1, 1);
-    //         chart2Text.text = FitnessExperiment.getCalculatedData(1, 2);
-    //         chart3Text.text = FitnessExperiment.getCalculatedData(1, 3);
-    //         chart4Text.text = FitnessExperiment.getCalculatedData(2, 1);
-    //         chart5Text.text = FitnessExperiment.getCalculatedData(2, 2);
-    //         chart6Text.text = FitnessExperiment.getCalculatedData(2, 3);
-
-    //     }
-    // }
-
-    //returns epoch
-
-    // function calculateTimepoint(timestamp, fixedPoint, currentPoint) {
-
-    //     if (fixedPoint === currentPoint)
-    //         return timestamp;
-
-    //     var difference = (currentPoint - fixedPoint) / 1000; //turn microseconds to ms
-
-    //     timestamp += difference;
-
-    //     return timestamp;
-    // }
-
+            chart1Text.text = FitnessExperiment.getCalculatedData(1, 1);
+            chart2Text.text = FitnessExperiment.getCalculatedData(1, 2);
+            chart3Text.text = FitnessExperiment.getCalculatedData(1, 3);
+            chart4Text.text = FitnessExperiment.getCalculatedData(2, 1);
+            chart5Text.text = FitnessExperiment.getCalculatedData(2, 2);
+            chart6Text.text = FitnessExperiment.getCalculatedData(2, 3);
+        }
+    }
 
     //returns seconds
 
@@ -223,13 +204,13 @@ Rectangle {
 
                     legend.visible: false
 
-                    // ValueAxis {
-                    //     id: axisX1
-                    // }
+                    ValueAxis {
+                        id: axisX1
+                    }
 
-                    // ValueAxis {
-                    //     id: axisY1
-                    // }
+                    ValueAxis {
+                        id: axisY1
+                    }
 
                     LineSeries {
                         axisX: axisX1
@@ -255,13 +236,13 @@ Rectangle {
 
                     legend.visible: false
 
-                    // ValueAxis {
-                    //     id: axisX2
-                    // }
+                    ValueAxis {
+                        id: axisX2
+                    }
 
-                    // ValueAxis {
-                    //     id: axisY2
-                    // }
+                    ValueAxis {
+                        id: axisY2
+                    }
 
                     LineSeries {
                         axisX: axisX2
@@ -287,13 +268,13 @@ Rectangle {
 
                     legend.visible: false
 
-                    // ValueAxis {
-                    //     id: axisX3
-                    // }
+                    ValueAxis {
+                        id: axisX3
+                    }
 
-                    // ValueAxis {
-                    //     id: axisY3
-                    // }
+                    ValueAxis {
+                        id: axisY3
+                    }
 
                     LineSeries {
                         axisX: axisX3
@@ -319,13 +300,13 @@ Rectangle {
 
                     legend.visible: false
 
-                    // ValueAxis {
-                    //     id: axisX4
-                    // }
+                    ValueAxis {
+                        id: axisX4
+                    }
 
-                    // ValueAxis {
-                    //     id: axisY4
-                    // }
+                    ValueAxis {
+                        id: axisY4
+                    }
 
                     LineSeries {
                         axisX: axisX4
@@ -351,13 +332,13 @@ Rectangle {
 
                     legend.visible: false
 
-                    // ValueAxis {
-                    //     id: axisX5
-                    // }
+                    ValueAxis {
+                        id: axisX5
+                    }
 
-                    // ValueAxis {
-                    //     id: axisY5
-                    // }
+                    ValueAxis {
+                        id: axisY5
+                    }
 
                     LineSeries {
                         axisX: axisX5
@@ -383,13 +364,13 @@ Rectangle {
 
                     legend.visible: false
 
-                    // ValueAxis {
-                    //     id: axisX6
-                    // }
+                    ValueAxis {
+                        id: axisX6
+                    }
 
-                    // ValueAxis {
-                    //     id: axisY6
-                    // }
+                    ValueAxis {
+                        id: axisY6
+                    }
 
                     LineSeries {
                         axisX: axisX6

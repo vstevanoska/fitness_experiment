@@ -4,7 +4,6 @@
 #include <QJsonObject>
 #include <QFile>
 #include <QDateTime>
-// #include <QWebSocket>
 #include <QQmlEngine>
 #include <QQmlComponent>
 #include <QtMath>
@@ -12,14 +11,13 @@
 FitnessExperiment::FitnessExperiment(QObject *parent)
     : QObject{parent}
 {
-    // clientSocket = new QWebSocket();
-    // connect(clientSocket, &QWebSocket::connected, this, &FitnessExperiment::onConnected);
-    // connect(clientSocket, &QWebSocket::disconnected,    this, &FitnessExperiment::closed);
+    clientSocket = new QWebSocket(QStringLiteral("Fitness Experiment Client"), QWebSocketProtocol::VersionLatest, this);
+    connect(clientSocket, &QWebSocket::connected, this, &FitnessExperiment::onConnected);
 
-    // clientSocket->open(QUrl("ws://192.168.10.123:1234"));   //if not connecting to server, ip has updated
+    clientSocket->open(QUrl("ws://192.168.10.123:1234"));   //if not connecting to server, ip has updated
 }
 
-void FitnessExperiment::addAccReading(const float &timestampTemp, const float &xTemp, const float &yTemp, const float &zTemp)
+void FitnessExperiment::addAccReading(const float timestampTemp, const float xTemp, const float yTemp, const float zTemp)
 {
     AccelerometerReading reading;
     reading.timestamp = timestampTemp;
@@ -30,7 +28,7 @@ void FitnessExperiment::addAccReading(const float &timestampTemp, const float &x
     accelerometerReadings.push_back(reading);
 }
 
-void FitnessExperiment::addGyrReading(const float &timestampTemp, const float &xTemp, const float &yTemp, const float &zTemp)
+void FitnessExperiment::addGyrReading(const float timestampTemp, const float xTemp, const float yTemp, const float zTemp)
 {
     GyroscopeReading reading;
     reading.timestamp = timestampTemp;
@@ -56,17 +54,12 @@ void FitnessExperiment::setExperimentType(const QString &typeTemp)
     experimentType = typeTemp;
 }
 
-void FitnessExperiment::setFrequency(const uint &freqTemp)
+void FitnessExperiment::setFrequency(const uint freqTemp)
 {
     frequency = freqTemp;
 }
 
-void FitnessExperiment::setSpeed(const QString &speedTemp)
-{
-    speed = speedTemp;
-}
-
-void FitnessExperiment::setTimestamp(const quint64 &timestampTemp)
+void FitnessExperiment::setTimestamp(const quint64 timestampTemp)
 {
     timestamp = timestampTemp;
 }
@@ -76,94 +69,92 @@ QVector<AccelerometerReading> * FitnessExperiment::getAccReadings()
     return &accelerometerReadings;
 }
 
-int FitnessExperiment::getAccReadingsSize()
+int FitnessExperiment::getAccReadingsSize() const 
 {
     return accelerometerReadings.size();
 }
 
-float FitnessExperiment::getAccTimestampAt(int index)
+float FitnessExperiment::getAccTimestampAt(int index) const
 {
     return accelerometerReadings.at(index).timestamp;
 }
 
-float FitnessExperiment::getAccXAt(int index)
+float FitnessExperiment::getAccXAt(int index) const
 {
     return accelerometerReadings.at(index).x;
 }
 
-float FitnessExperiment::getAccYAt(int index)
+float FitnessExperiment::getAccYAt(int index) const
 {
     return accelerometerReadings.at(index).y;
 }
 
-float FitnessExperiment::getAccZAt(int index)
+float FitnessExperiment::getAccZAt(int index) const
 {
     return accelerometerReadings.at(index).z;
 }
 
+void FitnessExperiment::setNumberOfReps(const int numberOfRepsTemp)
+{
+    numberOfReps = numberOfRepsTemp;
+}
 
-QVector<GyroscopeReading> * FitnessExperiment::getGyrReadings()
+QVector<GyroscopeReading> * FitnessExperiment::getGyrReadings() const
 {
     return &gyroscopeReadings;
 }
 
-int FitnessExperiment::getGyrReadingsSize()
+int FitnessExperiment::getGyrReadingsSize() const
 {
     return gyroscopeReadings.size();
 }
 
-float FitnessExperiment::getGyrTimestampAt(int index)
+float FitnessExperiment::getGyrTimestampAt(int index) const
 {
     return gyroscopeReadings.at(index).timestamp;
 }
 
-float FitnessExperiment::getGyrXAt(int index)
+float FitnessExperiment::getGyrXAt(int index) const
 {
     return gyroscopeReadings.at(index).x;
 }
 
-float FitnessExperiment::getGyrYAt(int index)
+float FitnessExperiment::getGyrYAt(int index) const
 {
     return gyroscopeReadings.at(index).y;
 }
 
-float FitnessExperiment::getGyrZAt(int index)
+float FitnessExperiment::getGyrZAt(int index) const
 {
     return gyroscopeReadings.at(index).z;
 }
 
-
-QString FitnessExperiment::getUser()
+QString FitnessExperiment::getUser() const
 {
     return user;
 }
 
-QString FitnessExperiment::getExperimentName()
+QString FitnessExperiment::getExperimentName() const
 {
     return experimentName;
 }
 
-QString FitnessExperiment::getExperimentType()
+QString FitnessExperiment::getExperimentType() const
 {
     return experimentType;
 }
 
-uint FitnessExperiment::getFrequency()
+uint FitnessExperiment::getFrequency() const
 {
     return frequency;
 }
 
-QString FitnessExperiment::getSpeed()
-{
-    return speed;
-}
-
-qint64 FitnessExperiment::getTimestamp()
+qint64 FitnessExperiment::getTimestamp() const
 {
     return timestamp;
 }
 
-void FitnessExperiment::sendToServer()
+void FitnessExperiment::sendToServer() const
 {
     //start building the json object to be sent to the server
     //called in experiment.qml
@@ -174,8 +165,8 @@ void FitnessExperiment::sendToServer()
     root.insert("experimentName", experimentName);
     root.insert("experimentType", experimentType);
     root.insert("frequency", (int)frequency);
-    root.insert("speed", speed);
     root.insert("timestamp", timestamp);
+    root.insert("numberOfReps", numberOfReps);
 
     //prepare the two measurement arrays
     QJsonArray accMeasurements;
@@ -209,28 +200,28 @@ void FitnessExperiment::sendToServer()
 
     root.insert("mode", "save");
 
+    QJsonDocument document;
     document.setObject(root);
 
-    // clientSocket->sendBinaryMessage(document.toJson());
+    clientSocket->sendBinaryMessage(document.toJson());
 }
 
 void FitnessExperiment::onConnected()
 {
-    // connect(clientSocket, &QWebSocket::binaryMessageReceived,    this, &FitnessExperiment::processBinaryMessage);
+    connect(clientSocket, &QWebSocket::binaryMessageReceived,    this, &FitnessExperiment::processBinaryMessage);
 }
 
 void FitnessExperiment::processBinaryMessage(QByteArray message)
 {
     qDebug() << "Binary message received!";
 
-    QJsonDocument document = QJsonDocument::fromJson(message);
-    QJsonObject root = document.object();
+    const QJsonObject root = QJsonDocument::fromJson(message).object();
 
     if (root.value("mode").toString() == "getFilenames") {
 
         //a list of every file in the data folder in the server has been returned
 
-        QJsonArray array = root.value("files").toArray();
+        const QJsonArray array = root.value("files").toArray();
 
         for (int i = 0; i < array.size(); ++i)
             filenames.push_back(array.at(i).toObject().value("filename").toString());
@@ -247,12 +238,11 @@ void FitnessExperiment::processBinaryMessage(QByteArray message)
         user            = root.value("user").toString();
         experimentName  = root.value("experimentName").toString();
         experimentType  = root.value("experimentType").toString();
-        speed           = root.value("speed").toString();
         frequency       = root.value("frequency").toInt();
         timestamp       = (qint64) root.value("timestamp").toDouble();
 
-        QJsonArray accelerometerArray   = root.value("accMeasurements").toArray();
-        QJsonArray gyroscopeArray       = root.value("gyrMeasurements").toArray();
+        const QJsonArray accelerometerArray   = root.value("accMeasurements").toArray();
+        const QJsonArray gyroscopeArray       = root.value("gyrMeasurements").toArray();
 
         for (int i = 0; i < accelerometerArray.size(); ++i) {
 
@@ -371,9 +361,9 @@ void FitnessExperiment::processBinaryMessage(QByteArray message)
             else if (gyrZMax < gyroscopeReadings.at(i).z)
                 gyrZMax = gyroscopeReadings.at(i).z;
 
-            gyrXAvg = gyroscopeReadings.at(0).x;
-            gyrYAvg = gyroscopeReadings.at(0).y;
-            gyrZAvg = gyroscopeReadings.at(0).z;
+            gyrXAvg += gyroscopeReadings.at(i).x;
+            gyrYAvg += gyroscopeReadings.at(i).y;
+            gyrZAvg += gyroscopeReadings.at(i).z;
         }
 
         gyrXAvg /= gyroscopeReadings.size();
@@ -396,82 +386,82 @@ void FitnessExperiment::processBinaryMessage(QByteArray message)
     }
 }
 
-float FitnessExperiment::getAccTsMin()
+float FitnessExperiment::getAccTsMin() const
 {
     return accTsMin;
 }
 
-float FitnessExperiment::getAccTsMax()
+float FitnessExperiment::getAccTsMax() const
 {
     return accTsMax;
 }
 
-float FitnessExperiment::getAccXMin()
+float FitnessExperiment::getAccXMin() const
 {
     return accXMin;
 }
 
-float FitnessExperiment::getAccXMax()
+float FitnessExperiment::getAccXMax() const
 {
     return accXMax;
 }
 
-float FitnessExperiment::getAccYMin()
+float FitnessExperiment::getAccYMin() const
 {
     return accYMin;
 }
 
-float FitnessExperiment::getAccYMax()
+float FitnessExperiment::getAccYMax() const
 {
     return accYMax;
 }
 
-float FitnessExperiment::getAccZMin()
+float FitnessExperiment::getAccZMin() const
 {
     return accZMin;
 }
 
-float FitnessExperiment::getAccZMax()
+float FitnessExperiment::getAccZMax() const
 {
     return accZMax;
 }
 
-float FitnessExperiment::getGyrTsMin()
+float FitnessExperiment::getGyrTsMin() const
 {
     return gyrTsMin;
 }
 
-float FitnessExperiment::getGyrTsMax()
+float FitnessExperiment::getGyrTsMax() const
 {
     return gyrTsMax;
 }
 
-float FitnessExperiment::getGyrXMin()
+float FitnessExperiment::getGyrXMin() const
 {
     return gyrXMin;
 }
 
-float FitnessExperiment::getGyrXMax()
+float FitnessExperiment::getGyrXMax() const
 {
     return gyrXMax;
 }
 
-float FitnessExperiment::getGyrYMin()
+float FitnessExperiment::getGyrYMin() const
 {
     return gyrYMin;
 }
 
-float FitnessExperiment::getGyrYMax()
+float FitnessExperiment::getGyrYMax() const
 {
     return gyrYMax;
 }
 
-float FitnessExperiment::getGyrZMin()
+float FitnessExperiment::getGyrZMin() const
 {
     return gyrZMin;
 }
 
-float FitnessExperiment::getGyrZMax()
+float FitnessExperiment::getGyrZMax() const
 {
     return gyrZMax;
 }
@@ -482,27 +472,50 @@ void FitnessExperiment::clearVectors()
     gyroscopeReadings.clear();
 }
 
-QStringList FitnessExperiment::getFilenames()
+QStringList FitnessExperiment::getFilenames() const
 {
     return filenames;
 }
 
-void FitnessExperiment::cancelExperiment()  // redundant function! improvement: make clearParameters Q_INVOKABLE
-{
-    clearParameters();
-}
-
 void FitnessExperiment::clearParameters()
 {
-    accelerometerReadings.clear();
-    gyroscopeReadings.clear();
+    clearVectors();
 
     user            = "";
     experimentName  = "";
     experimentType  = "";
-    speed           = "";
     frequency       = 0;
     timestamp       = 0;
+
+    // clear previous sensor values
+    accTsMin = 0.0f;
+    accTsMax = 0.0f;
+    accXMin = 0.0f;
+    accXMax = 0.0f;
+    accYMin = 0.0f;
+    accYMax = 0.0f;
+    accZMin = 0.0f;
+    accZMax = 0.0f;
+    gyrTsMin = 0.0f;
+    gyrTsMax = 0.0f;
+    gyrXMin = 0.0f;
+    gyrXMax = 0.0f;
+    gyrYMin = 0.0f;
+    gyrYMax = 0.0f;
+    gyrZMin = 0.0f;
+    gyrZMax = 0.0f;
+    accXAvg = 0.0f;
+    accYAvg = 0.0f;
+    accZAvg = 0.0f;
+    accXStd = 0.0f;
+    accYStd = 0.0f;
+    accZStd = 0.0f;
+    gyrXAvg = 0.0f;
+    gyrYAvg = 0.0f;
+    gyrZAvg = 0.0f;
+    gyrXStd = 0.0f;
+    gyrYStd = 0.0f;
+    gyrZStd = 0.0f;
 }
 
 void FitnessExperiment::loadFilenames()
@@ -518,7 +531,7 @@ void FitnessExperiment::loadFilenames()
     QJsonDocument document;
     document.setObject(getFilenamesObj);
 
-    // clientSocket->sendBinaryMessage(document.toJson());
+    clientSocket->sendBinaryMessage(document.toJson());
 }
 
 void FitnessExperiment::loadExperiment(QString filename)
@@ -535,7 +548,7 @@ void FitnessExperiment::loadExperiment(QString filename)
     QJsonDocument document;
     document.setObject(getExperiment);
 
-    // clientSocket->sendBinaryMessage(document.toJson());
+    clientSocket->sendBinaryMessage(document.toJson());
 }
 
 void FitnessExperiment::clearLoadExperimentRanges()
@@ -561,7 +574,7 @@ void FitnessExperiment::clearLoadExperimentRanges()
     //avgs and stds needn't be cleared, since they're being set in processBinaryMessage
 }
 
-QString FitnessExperiment::getCalculatedData(uint sensorMode, uint coordinateMode)
+QString FitnessExperiment::getCalculatedData(uint sensorMode, uint coordinateMode) const
 {
     //calculate average, standard deviation, add min and max to string for charts page
     //sensorMode values: 1 -> acc; 2 -> gyr
@@ -622,4 +635,3 @@ QString FitnessExperiment::getCalculatedData(uint sensorMode, uint coordinateMod
     return QString("Min: " + QString::number(min) + "   Max: " + QString::number(max) + "   Avg: " +
                    QString::number(average) + "   Std: " + QString::number(standardDeviation));
 }
-

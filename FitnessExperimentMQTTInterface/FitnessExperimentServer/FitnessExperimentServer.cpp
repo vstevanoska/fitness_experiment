@@ -39,9 +39,6 @@ void FitnessExperimentServer::onNewConnection()
     connect(pSocket, &QWebSocket::disconnected,             this, &FitnessExperimentServer::socketDisconnected);
 
     clients << pSocket;
-
-    // if (debug)
-    //     qDebug() << "Added to clients";
 }
 
 void FitnessExperimentServer::processTextMessage(QString message)
@@ -57,10 +54,7 @@ void FitnessExperimentServer::processTextMessage(QString message)
 
 void FitnessExperimentServer::processBinaryMessage(QByteArray message)
 {
-    // QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-
     if (debug)
-        // qDebug() << "Binary message received:" << QString(message);
         qDebug() << "Binary message received!";
 
     QJsonDocument document = QJsonDocument::fromJson(message);
@@ -87,40 +81,8 @@ void FitnessExperimentServer::processBinaryMessage(QByteArray message)
         outStream << message;
 
         saveFile.close();
+    } 
 
-    } /*else if (root.value("mode").toString() == "getFile") {
-
-        QJsonDocument sendingDocument;
-        QJsonObject rootSending;
-
-        QJsonArray files;
-
-        for (const QFileInfo &file : QDir("C:\\Users\\Viktorija\\Desktop\\VR\\RV1\\FitnessExperimentServer\\FitnessExperimentServer\\data").entryInfoList(QDir::Files)) {
-
-            QJsonObject sendingFile;
-            sendingFile.insert("filename", file.fileName());
-
-            QFile readFile(file.absoluteFilePath());
-
-            if (!readFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-                qDebug() << "Can't open file!";
-                return;
-            }
-
-            sendingFile.insert("content", QJsonDocument::fromJson(readFile.readAll()).object());
-
-            files.push_back(sendingFile);
-        }
-
-        rootSending.insert("files", files);
-        sendingDocument.setObject(rootSending);
-
-        QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-
-        if (pClient)
-            pClient->sendBinaryMessage(sendingDocument.toJson());
-
-    }*/
     else if (root.value("mode").toString() == "getFilenames") {
 
         QJsonDocument sendingDocument;
@@ -171,11 +133,6 @@ void FitnessExperimentServer::processBinaryMessage(QByteArray message)
         if (pClient)
             pClient->sendBinaryMessage(readingDocument.toJson());
     }
-
-    // if (pClient)
-    //     pClient->sendBinaryMessage(QByteArray("Hello back to you!"));
-
-
 }
 
 void FitnessExperimentServer::socketDisconnected()

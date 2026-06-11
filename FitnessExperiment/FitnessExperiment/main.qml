@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.15
 import QtSensors 5.0
 import QtGraphicalEffects 1.12
 
-// import com.company.fitnessExperiment 1.0
+import com.company.fitnessExperiment 1.0
 
 ApplicationWindow {
     title: "Fitness Monitor"
@@ -38,7 +38,7 @@ ApplicationWindow {
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredHeight: titleHeight
                 text: "Fitness Monitor"
-                color: "#5E69EE" //#39AFEA - accent
+                color: "#5E69EE"
                 font.weight: Font.Black
                 font.family: georgiaFont.name
                 font.pixelSize: titleFontSize
